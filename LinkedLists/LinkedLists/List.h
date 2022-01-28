@@ -15,9 +15,9 @@ public:
 	Iterator<T> getLastNode(); //Returns the ndoe at the end of the list
 	const bool checkIfIncludes(const T object); // Checks to see if the given item is in the list
 
-	void pushFront(const T& value); //Adds a new node at the beginning of the list
-	void pushBack(const T& value); //Adds a new node to the end of the list
-	bool insert(const T& value); //Adds a new node at the given index
+	void addToFront(const T& value); //Adds a new node at the beginning of the list
+	void addToBack(const T& value); //Adds a new node to the end of the list
+	bool insert(const T& value, int index); //Adds a new node at the given index
 	bool remove(const T& value); //Removes all the nodes with the given value
 
 	void print() const; //Prints every node's value
@@ -37,9 +37,7 @@ private:
 
 template<typename T>
 inline List<T>::List() {
-	m_firstNode = nullptr;
-	m_lastNode = nullptr;
-	m_nodeCount = 0;
+	initialize();
 }
 
 template<typename T>
@@ -73,4 +71,58 @@ template<typename T>
 inline Iterator<T> List<T>::getLastNode() {
 	Iterator<T> iterator(m_lastNode); //Creates an iterator that points at the last node
 	return iterator;
+}
+
+template<typename T>
+inline const bool List<T>::checkIfIncludes(const T object)
+{
+	for (Iterator<T> iterator(getFirstNode()); iterator != getLastNode(); ++iterator) {
+		if (*iterator == object)
+			return true;
+	}
+	return false;
+}
+
+template<typename T>
+inline void List<T>::addToFront(const T& value) {
+	Node<T>* newNode;
+
+	newNode->nextNode = m_firstNode;
+	m_firstNode->previousNode = newNode;
+	m_firstNode = newNode;
+	m_nodeCount++;
+}
+
+template<typename T>
+inline void List<T>::addToBack(const T& value) {
+	Node<T>* newNode;
+
+	newNode->previousNode = m_lastNode;
+	m_lastNode->nextNode = newNode;
+	m_lastNode = newNode;
+	m_nodeCount++;
+}
+
+template<typename T>
+inline bool List<T>::insert(const T& value, int index) {
+	if (index >= 0 || index < m_nodeCount)
+		return false;
+
+	Node<T>* newNode;
+	
+	if (index == 0) {
+		newNode->nextNode = m_firstNode;
+		m_firstNode->previousNode = newNode;
+		m_firstNode = newNode;
+	}
+	else if (index == m_nodeCount) {
+		newNode->previousNode = m_lastNode;
+		m_lastNode->nextNode = newNode;
+		m_lastNode = newNode;
+	}
+
+	for (int i = 0; i < index; i++) {
+
+	}
+
 }
