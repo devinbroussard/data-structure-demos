@@ -8,7 +8,7 @@ public:
 
 	Node<T>* nextNode; //The next node in the linked list
 	Node<T>* previousNode; //The previous node in the linked list
-	T data;
+	T data; //The data that the current node holds
 };
 
 template<typename T>
@@ -20,7 +20,5 @@ inline Node<T>::Node() {
 
 template<typename T>
 inline Node<T>::Node(T value) {
-	//Set nextNode value
-	//Set previousNode value
 	data = value;
 }
