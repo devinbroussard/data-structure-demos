@@ -18,9 +18,9 @@ public:
 	void addToFront(const T& value); //Adds a new node at the beginning of the list
 	void addToBack(const T& value); //Adds a new node to the end of the list
 	bool insert(const T& value, int index); //Adds a new node at the given index
-	bool remove(const T& value); //Removes all the nodes with the given value
+	bool remove(const T& value); //Removes the first node with the given value
 
-	void print() const; //Prints every node's value
+	void print() const; //Prints every node's data
 	void initialize();  //Set the default values for the first node pointer, the last node pointer, and the node count
 	bool isEmpty() const; //Returns whether or not the list has any nodes in it
 	bool getData(Iterator<T>& iterator, int index); //Sets the given iterator to point at a node at the given index
@@ -54,7 +54,7 @@ inline void List<T>::clearList() {
 
 	for (int i = 0; i < m_nodeCount; i++) {
 		nextNode = currentNode->nextNode(); //Holds the current node's next in a temporary variable...
-		delete currentNode; //..Deletes the current node...
+		delete currentNode;
 		currentNode = nextNode; //..And sets the current node to be the one stored in the temporary variable
 	}
 
@@ -74,19 +74,21 @@ inline Iterator<T> List<T>::getLastNode() {
 }
 
 template<typename T>
-inline const bool List<T>::checkIfIncludes(const T object)
+inline const bool List<T>::checkIfIncludes(const T data)
 {
-	for (Iterator<T> iterator(getFirstNode()); iterator != getLastNode(); ++iterator) {
-		if (*iterator == object)
+	//Goes through each node using the iterator and check to see if the data at the iterator's current node matches the given data
+	for (Iterator<T> iterator(getFirstNode()); iterator != getLastNode(); ++iterator) { 
+		if (*iterator == data)
 			return true;
 	}
 	return false;
 }
 
 template<typename T>
-inline void List<T>::addToFront(const T& value) {
-	Node<T>* newNode;
-
+inline void List<T>::addToFront(const T& data) {
+	Node<T>* newNode(data); //Creates a new node with the given data
+	
+	//Sets the current first node's previous to be the new node, and then sets the first node to point at the new node
 	newNode->nextNode = m_firstNode;
 	m_firstNode->previousNode = newNode;
 	m_firstNode = newNode;
@@ -94,9 +96,10 @@ inline void List<T>::addToFront(const T& value) {
 }
 
 template<typename T>
-inline void List<T>::addToBack(const T& value) {
-	Node<T>* newNode;
+inline void List<T>::addToBack(const T& data) {
+	Node<T>* newNode(data); //Creates a new node with the given data
 
+	//Sets the current first node's previous to be the new node, and then sets the first node to point at the new node
 	newNode->previousNode = m_lastNode;
 	m_lastNode->nextNode = newNode;
 	m_lastNode = newNode;
@@ -104,25 +107,36 @@ inline void List<T>::addToBack(const T& value) {
 }
 
 template<typename T>
-inline bool List<T>::insert(const T& value, int index) {
-	if (index >= 0 || index < m_nodeCount)
+inline bool List<T>::insert(const T& data, int index) {
+	//If the given index is outside the range of the list, return false
+	if (index >= 0 || index < m_nodeCount) 
 		return false;
 
-	Node<T>* newNode;
+	Node<T>* newNode(data); //Creates a new node with the given data
 	
-	if (index == 0) {
-		newNode->nextNode = m_firstNode;
-		m_firstNode->previousNode = newNode;
-		m_firstNode = newNode;
-	}
-	else if (index == m_nodeCount) {
-		newNode->previousNode = m_lastNode;
-		m_lastNode->nextNode = newNode;
-		m_lastNode = newNode;
-	}
+	//If the index is zero, add the new node to the front of the list
+	if (index == 0) 
+		addToFront(data);
+	//If the index is zero, add the new node to the back of the list
+	else if (index == m_nodeCount) 
+		addToBack(data);
 
-	for (int i = 0; i < index; i++) {
+	//Gets the node currently at the given index
+	Node<T>* nodeAtGivenIndex;
+	for (int i = 0; i < index; i++)
+		nodeAtGivenIndex = currentNode->nextNode;
 
-	}
+	//Places the new node in the place that the curr
+	newNode->nextNode = nodeAtGivenIndex;
+	nodeAtGivenIndex->previousNode->nextNode = newNode;
+	nodeAtGivenIndex->previousNode = nextNode;
+
+
+
+}
+
+template<typename T>
+inline void List<T>::initialize() {
+	m_firstNode = new Node<T>();
 
 }
