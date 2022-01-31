@@ -8,12 +8,12 @@ class List {
 public:
 	List();
 	List(const List<T>& otherList);
-	~List() {};
+	~List();
 
 	void clearList(); //Deletes all nodes in the list
 
-	Iterator<T> getFirstNode(); //Returns the node at the start of the list
-	Iterator<T> getLastNode(); //Returns the ndoe at the end of the list
+	Iterator<T> getFirstNode() const; //Returns the node at the start of the list
+	Iterator<T> getLastNode() const; //Returns the ndoe at the end of the list
 	const bool checkIfIncludes(const T object); // Checks to see if the given item is in the list
 
 	void addToFront(const T& value); //Adds a new node at the beginning of the list
@@ -49,6 +49,12 @@ inline List<T>::List(const List<T>& otherList) {
 }
 
 template<typename T>
+inline List<T>::~List()
+{
+	clearList();
+}
+
+template<typename T>
 inline void List<T>::clearList() {
 	Node<T>* currentNode = m_firstNode;
 	Node<T>* nextNode;
@@ -63,14 +69,14 @@ inline void List<T>::clearList() {
 }
 
 template<typename T>
-inline Iterator<T> List<T>::getFirstNode() {
+inline Iterator<T> List<T>::getFirstNode() const{
 	Iterator<T> iterator(m_firstNode); //Creates an iterator that points at the first node
 	return iterator;
 }
 
 template<typename T>
-inline Iterator<T> List<T>::getLastNode() {
-	Iterator<T> iterator(m_lastNode); //Creates an iterator that points at the last node
+inline Iterator<T> List<T>::getLastNode() const {
+	Iterator<T> iterator(m_lastNode->nextNode); //Creates an iterator that points at the last node
 	return iterator;
 }
 
@@ -123,6 +129,7 @@ inline void List<T>::addToBack(const T& data) {
 	else {
 		//Sets the current first node's previous to be the new node, and then sets the first node to point at the new nodenewNode->previousNode = m_lastNode;
 		m_lastNode->nextNode = newNode;
+		newNode->previousNode = m_lastNode;
 		m_lastNode = newNode;
 	}	
 	m_nodeCount++;
@@ -131,17 +138,21 @@ inline void List<T>::addToBack(const T& data) {
 template<typename T>
 inline bool List<T>::insert(const T& data, int index) {
 	//If the given index is outside the range of the list, return false
-	if (index >= 0 || index < m_nodeCount) 
+	if (index < 0 || index > m_nodeCount) 
 		return false;
 
 	Node<T>* newNode = new Node<T>(data); //Creates a new node with the given data
 	
 	//If the index is zero, add the new node to the front of the list
-	if (index == 0) 
+	if (index == 0) {
 		addToFront(data);
+		return true;
+	}
 	//If the index is zero, add the new node to the back of the list
-	else if (index == getLength()) 
+	else if (index == getLength()) {
 		addToBack(data);
+		return true;
+	}
 
 	//Gets the node currently at the given index
 	Node<T>* nodeAtGivenIndex = m_firstNode;
@@ -151,7 +162,7 @@ inline bool List<T>::insert(const T& data, int index) {
 	//Places the new node in the place that the current node is
 	newNode->nextNode = nodeAtGivenIndex;
 	newNode->previousNode = nodeAtGivenIndex->previousNode;
-	nodeAtGivenIndex->previousNode->nextNode = newNode;
+	newNode->previousNode->nextNode = newNode;
 	nodeAtGivenIndex->previousNode = newNode;
 }
 
@@ -161,10 +172,11 @@ inline bool List<T>::remove(const T& value) {
 	Node<T>* currentNode = m_firstNode;
 	for (int i = 0; i < getLength(); i++) {
 		//If the current node's data matches the value given..
-		if (currentNode->data = value) {
+		if (currentNode->data == value) {
 			//If the current node matches the first node...
 			if (currentNode == m_firstNode) {
 				m_firstNode = currentNode->nextNode; //Set the first node to be the current first node's next node;
+				m_firstNode->previousNode = nullptr;
 				delete currentNode; //Deletes the current node
 			}
 			//Else if the current node matches the last node...
@@ -179,6 +191,7 @@ inline bool List<T>::remove(const T& value) {
 				currentNode->nextNode->previousNode = currentNode->previousNode;
 				delete currentNode; //Deletes the current node
 			} 
+			m_nodeCount--;
 			return true;
 		}
 		//If the current node's data does not match the value, go to the next node
@@ -239,22 +252,21 @@ template<typename T>
 inline void List<T>::sort() {
 	Iterator<T> iterator(m_firstNode);
 	T key = NULL;
-	int i = 1;
+	int i = 0;
 	int j = 0;
 
-	for (Iterator<T> iteratorTwo(m_firstNode->nextNode); iteratorTwo != getLastNode(); ++iteratorTwo) {
+	for (Iterator<T> iteratorTwo(m_firstNode->nextNode); iteratorTwo != getLastNode();) {
 		i++;
-		iterator = Iterator<T>(m_firstNode);
-		for (int k = 0; k < i; k++)
-			++iterator;
+		key = *iteratorTwo;
 		j = i - 1;
+		iterator = iteratorTwo;
+		--iterator;
 		while (j >= 0 && *iterator > key) {
-			remove(*iterator);
-			insert(*iterator, j + 1);
 			j--;
 			--iterator;
 		}
-		iterator = Iterator<T>(m_firstNode);
-
+		++iteratorTwo;
+		remove(key);
+		insert(key, j + 1);
 	}
 }
