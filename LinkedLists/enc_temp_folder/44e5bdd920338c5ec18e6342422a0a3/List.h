@@ -254,7 +254,6 @@ inline void List<T>::sort() {
 			j--;
 			--iterator;
 		}
-		iterator = Iterator<T>(m_firstNode);
 
 	}
 }
