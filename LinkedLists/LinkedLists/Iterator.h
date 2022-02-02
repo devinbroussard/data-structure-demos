@@ -48,12 +48,9 @@ inline const bool Iterator<T>::operator==(const Iterator<T>& iterator) {
 
 template<typename T>
 inline const bool Iterator<T>::operator!=(const Iterator<T>& iterator) {
-	if (iterator.m_currentNode == nullptr && m_currentNode == nullptr)
-		return false;
-	else if (m_currentNode->data != iterator.m_currentNode->data)
+	if (m_currentNode != iterator.m_currentNode)
 		return true;
-
-	else return false;
+	return false;
 }
 
 template<typename T>

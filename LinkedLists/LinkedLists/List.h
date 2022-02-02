@@ -202,7 +202,7 @@ inline bool List<T>::remove(const T& value) {
 
 template<typename T>
 inline void List<T>::print() const {
-	for (Iterator<T> iterator(m_firstNode); iterator != nullptr; ++iterator) {
+	for (Iterator<T> iterator(m_firstNode); iterator != getLastNode(); ++iterator) {
 		std::cout << *iterator << "\n";
 	}
 	std::cout << "\n";

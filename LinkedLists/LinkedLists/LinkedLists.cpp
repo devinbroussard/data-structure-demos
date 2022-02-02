@@ -5,8 +5,9 @@ int main() {
 	List<int> list;
 	list.addToFront(10);
 	list.addToFront(3);
+	list.addToFront(4);
 	list.addToFront(7);
-	list.print();
+	list.addToFront(11);
 	list.sort();
 	list.print();
 }
