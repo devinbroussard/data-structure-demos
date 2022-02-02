@@ -41,7 +41,7 @@ inline Iterator<T> Iterator<T>::operator--() {
 
 template<typename T>
 inline const bool Iterator<T>::operator==(const Iterator<T>& iterator) {
-	if (m_currentNode->data == iterator.m_currentNode->data)
+	if (m_currentNode == iterator.m_currentNode)
 		return true;
 	else return false;
 }
