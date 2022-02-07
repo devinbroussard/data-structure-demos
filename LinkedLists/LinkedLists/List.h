@@ -24,7 +24,7 @@ public:
 	void print() const; //Prints every node's data
 	void initialize();  //Set the default values for the first node pointer, the last node pointer, and the node count
 	bool isEmpty() const; //Returns whether or not the list has any nodes in it
-	bool getData(Iterator<T>& iterator, int index); //Sets the given iterator to point at a node at the given index
+	bool getData(Iterator<T>& iterator, int index); //Sets the given backwardsIterator to point at a node at the given index
 	int getLength() const; //Returns the amount of nodes in the list
 
 	const List<T>& operator =(const List<T>& otherList); //Sets a list to be equal to another
@@ -70,20 +70,20 @@ inline void List<T>::clearList() {
 
 template<typename T>
 inline Iterator<T> List<T>::getFirstNode() const{
-	Iterator<T> iterator(m_firstNode); //Creates an iterator that points at the first node
+	Iterator<T> iterator(m_firstNode); //Creates an backwardsIterator that points at the first node
 	return iterator;
 }
 
 template<typename T>
 inline Iterator<T> List<T>::getLastNode() const {
-	Iterator<T> iterator(m_lastNode->nextNode); //Creates an iterator that points at the last node
+	Iterator<T> iterator(m_lastNode->nextNode); //Creates an backwardsIterator that points at the last node
 	return iterator;
 }
 
 template<typename T>
 inline const bool List<T>::checkIfIncludes(const T data)
 {
-	//Goes through each node using the iterator and check to see if the data at the iterator's current node matches the given data
+	//Goes through each node using the backwardsIterator and check to see if the data at the backwardsIterator's current node matches the given data
 	for (Iterator<T> iterator(getFirstNode()); iterator != getLastNode(); ++iterator) { 
 		if (*iterator == data)
 			return true;
@@ -164,6 +164,7 @@ inline bool List<T>::insert(const T& data, int index) {
 	newNode->previousNode = nodeAtGivenIndex->previousNode;
 	newNode->previousNode->nextNode = newNode;
 	nodeAtGivenIndex->previousNode = newNode;
+	m_nodeCount++;
 }
 
 template<typename T>
@@ -182,6 +183,7 @@ inline bool List<T>::remove(const T& value) {
 			//Else if the current node matches the last node...
 			else if (currentNode == m_lastNode) { 
 				m_lastNode = currentNode->previousNode; //Set the last node to be equal to the current node's previous node
+				m_lastNode->nextNode = nullptr;
 				delete currentNode; //Deletes the current node
 			}
 			else {
@@ -228,8 +230,8 @@ inline bool List<T>::getData(Iterator<T>& iterator, int index)
 	if (index < 0 || index < getLength())
 		return false;
 
-	iterator = getFirstNode(); //Sets the iterator equal to the first node in this list 
-	//Loops through the list until the iterator reaches the node at the given index
+	iterator = getFirstNode(); //Sets the backwardsIterator equal to the first node in this list 
+	//Loops through the list until the backwardsIterator reaches the node at the given index
 	while (iterator < index) 
 		++iterator; 
 	return true;
@@ -250,23 +252,26 @@ inline const List<T>& List<T>::operator=(const List<T>& otherList) {
 
 template<typename T>
 inline void List<T>::sort() {
-	Iterator<T> iterator(m_firstNode);
-	T key = NULL;
-	int i = 0;
-	int j = 0;
+	Iterator<T> backwardsIterator(m_firstNode); //Iterator that points at the first node
+	T key = NULL; //Stores the value of the node that 
+	int i = 0; //Temporary variable used for for loop
+	int j = 0; //Temporary variable used for for loop
 
-	for (Iterator<T> iteratorTwo(m_firstNode->nextNode); iteratorTwo != getLastNode();) {
-		i++;
-		key = *iteratorTwo;
-		j = i - 1;
-		iterator = iteratorTwo;
-		--iterator;
-		while (j >= 0 && *iterator > key) {
-			j--;
-			--iterator;
+	//Loops forwards through a list using an backwardsIterator
+	for (Iterator<T> forwardIterator(m_firstNode->nextNode); forwardIterator != getLastNode();) {
+		i++; 
+		key = *forwardIterator; //Sets the key equal to the forwardIterator's current node
+		j = i - 1; //Sets j to be one less than i
+
+		backwardsIterator = forwardIterator; //Sets the backwardsIterator to be one less than the forwardIterator
+		--backwardsIterator; 
+		//While j is less than or greator to 0, and the backwardsIterator's current node's value is greater than the key
+		while (j >= 0 && *backwardsIterator > key) {
+			j--; //Decrement j
+			--backwardsIterator; //Decrement the backwardsIterator
 		}
-		++iteratorTwo;
-		remove(key);
-		insert(key, j + 1);
+		++forwardIterator; //Increment the forwardIterator
+		remove(key); //Removes the key...
+		insert(key, j + 1); //...and adds it back and the index of j + 1
 	}
 }
