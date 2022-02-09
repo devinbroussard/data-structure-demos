@@ -31,6 +31,8 @@ public:
 	void sort(); //Sorts the nodes in the list 
 
 private:
+	bool remove(const T& value, int index);
+
 	Node<T>* m_firstNode; //First node in the list
 	Node<T>* m_lastNode; //Last node in the list
 	int m_nodeCount; //Number of nodes in the list
@@ -271,7 +273,46 @@ inline void List<T>::sort() {
 			--backwardsIterator; //Decrement the backwardsIterator
 		}
 		++forwardIterator; //Increment the forwardIterator
-		remove(key); //Removes the key...
+		remove(key, i); //Removes the key...
 		insert(key, j + 1); //...and adds it back and the index of j + 1
 	}
+}
+
+template<typename T>
+inline bool List<T>::remove(const T& value, int index)
+{
+	if (index < 0 || index > getLength())
+		return false;
+
+	//Loops through the nodes and gets the node at the given index
+	Node<T>* currentNode = m_firstNode;
+	for (int i = 0; i < index; i++) {
+		//Increments through the list, getting the next node
+		currentNode = currentNode->nextNode;
+	}
+
+	if (currentNode->data != value)
+		return false;
+
+	//If the current node matches the first node...
+	if (currentNode == m_firstNode) {
+		m_firstNode = currentNode->nextNode; //Set the first node to be the current first node's next node;
+		m_firstNode->previousNode = nullptr;
+		delete currentNode; //Deletes the current node
+	}
+	//Else if the current node matches the last node...
+	else if (currentNode == m_lastNode) {
+		m_lastNode = currentNode->previousNode; //Set the last node to be equal to the current node's previous node
+		m_lastNode->nextNode = nullptr;
+		delete currentNode; //Deletes the current node
+	}
+	else {
+		//Sets the current node's previous node's next node variable to be equal to the current node's next node
+		currentNode->previousNode->nextNode = currentNode->nextNode;
+		//Sets the current node's next node's previous node variable to be equal to the current node's previous node
+		currentNode->nextNode->previousNode = currentNode->previousNode;
+		delete currentNode; //Deletes the current node
+	}
+	m_nodeCount--;
+	return true;
 }
