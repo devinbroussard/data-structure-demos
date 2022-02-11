@@ -1,15 +1,11 @@
 #pragma once
 
-template<typename TKey, typename TValue>
-struct Item {
-public:
-	TKey key; //The key that accesses the value
-	TValue value; //The value that is accessed by the key
-};
+
 
 
 template<typename TKey, typename TValue>
 class Dictionary {
+
 public:
 	//Creates a dictionary with default values
 	Dictionary<typename TKey, typename TValue>();
@@ -35,39 +31,90 @@ public:
 	//Returns the item count
 	int getCount() const;
 	//Sets one dictionary equal to another by copying its items
-	Dictionary<typename TKey, typename TValue>& operator =(const Dictionary<typename TKey, typename TValue> other) const;
+	const Dictionary<typename TKey, typename TValue>& operator =(const Dictionary<typename TKey, typename TValue> other);
+	//Returns the value with the key given
+	TValue operator [](const TKey key);
 
 private:
+	struct Item {
+	public:
+		TKey key; //The key that accesses the value
+		TValue value; //The value that is accessed by the key
+	};
+
+
 	//The amount of items in the dictionary
 	int m_count = 0;
 	//An array of items that store a key and a value
-	Item<typename TKey, typename TValue>* m_items = nullptr;
+	Item* m_items = nullptr;
 };
 
 template<typename TKey, typename TValue>
 inline void Dictionary<TKey, TValue>::clear() {
 	delete[] m_items;
+	m_items = nullptr;
 	m_count = 0;
+}
+
+template<typename TKey, typename TValue>
+inline bool Dictionary<TKey, TValue>::containsKey(const TKey key) const
+{
+	//Loops through the items list, and returns true if one of the keys matches the key given
+	for (int i = 0; i < getCount(); i++) {
+		if (m_items[i].key == key)
+			return true;
+	}
+	return false; //Returns false by default
+}
+
+template<typename TKey, typename TValue>
+inline bool Dictionary<TKey, TValue>::containsValue(const TValue value) const
+{
+	//Loops through the list, and returns true if one of the items' value is the same as the one given
+	for (int i = 0; i < getCount(); i++) {
+		if (m_items[i].value == value)
+			return true;
+	}
+	return false; //Returns false by default
+}
+
+template<typename TKey, typename TValue>
+inline bool Dictionary<TKey, TValue>::tryGetValue(const TKey key, const TValue& value) const
+{
+	return false;
 }
 
 template<typename TKey, typename TValue>
 inline Dictionary<TKey, TValue>::Dictionary() {
-	m_count = 0;
+	//Initializes variables
 	m_items = nullptr;
+	m_count = 0;
 }
 
 template<typename TKey, typename TValue>
-inline Dictionary<TKey, TValue>::Dictionary(const Dictionary<typename TKey, typename TValue>& other) {
-	this = other;
-}
+inline const Dictionary<typename TKey, typename TValue>& Dictionary<TKey, TValue>::operator=(const Dictionary<typename TKey, typename TValue> other) {
+	clear(); //Clears the list
+	//Sets m_items equal to a new items list that is equal in size to the other's
+	m_items = new Item[other.getCount()]();
 
-template<typename TKey, typename TValue>
-inline Dictionary<typename TKey, typename TValue>& Dictionary<TKey, TValue>::operator=(const Dictionary<typename TKey, typename TValue> other) const
-{
-	clear();
-
+	//Copies the values from the other list onto this list
 	for (int i = 0; i < other.getCount(); i++) {
 		m_items[i] = other.m_items[i];
 	}
+
+	//Sets the count equal to the other list's count
+	m_count = other.getCount();
+}
+
+
+template<typename TKey, typename TValue>
+inline Dictionary<TKey, TValue>::Dictionary(const Dictionary<typename TKey, typename TValue>& other) {
+	*this = other; //Copies the values of the other dictionary onto this one
+}
+
+template<typename TKey, typename TValue>
+inline Dictionary<TKey, TValue>::~Dictionary()
+{
+	clear(); //Clears the dictionary
 }
 

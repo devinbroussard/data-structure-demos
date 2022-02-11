@@ -147,7 +147,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Dictionary.cpp" />
     <ClCompile Include="LinkedLists.cpp" />
   </ItemGroup>
   <ItemGroup>
