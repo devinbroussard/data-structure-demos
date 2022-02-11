@@ -147,9 +147,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Dictionary.cpp" />
     <ClCompile Include="LinkedLists.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Dictionary.h" />
     <ClInclude Include="DynamicArray.h" />
     <ClInclude Include="Iterator.h" />
     <ClInclude Include="List.h" />

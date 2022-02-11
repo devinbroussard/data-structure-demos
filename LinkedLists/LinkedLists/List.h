@@ -45,9 +45,12 @@ inline List<T>::List() {
 
 template<typename T>
 inline List<T>::List(const List<T>& otherList) {
-	m_firstNode = otherList.m_firstNode;
-	m_lastNode = otherList.m_lastNode;
-	m_nodeCount = otherList.m_nodeCount;
+	Node<T>* otherCurrentNode = otherList.m_firstNode;
+	
+	for (int i = 0; i < otherList.getLength(); i++) {
+		insert(otherCurrentNode->data, i);
+		otherCurrentNode = otherCurrentNode->nextNode;
+	}
 }
 
 template<typename T>
@@ -206,6 +209,9 @@ inline bool List<T>::remove(const T& value) {
 
 template<typename T>
 inline void List<T>::print() const {
+	if (m_firstNode == nullptr)
+		return;
+
 	for (Iterator<T> iterator(m_firstNode); iterator != getLastNode(); ++iterator) {
 		std::cout << *iterator << "\n";
 	}

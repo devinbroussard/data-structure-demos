@@ -25,6 +25,4 @@ int main() {
 
 	//list3.remove(42);
 
-
-	system("pause");
 }
