@@ -23,5 +23,5 @@ int main() {
 	//num = 0;
 
 	dictionary2.tryGetValue('b', num);
-	std::cout << dictionary2.containsKey('d');
+	std::cout << num;
 }

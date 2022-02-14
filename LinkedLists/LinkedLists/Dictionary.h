@@ -31,7 +31,7 @@ public:
 	//Returns the item count
 	int getCount() const { return m_itemCount; }
 	//Sets one dictionary equal to another by copying its items
-	const Dictionary<typename TKey, typename TValue>& operator =(const Dictionary<typename TKey, typename TValue> other);
+	const Dictionary<typename TKey, typename TValue>& operator =(const Dictionary<typename TKey, typename TValue>& other);
 	//Returns the value with the key given
 	TValue operator [](const TKey key);
 
@@ -167,8 +167,20 @@ inline Dictionary<TKey, TValue>::Dictionary() {
 }
 
 template<typename TKey, typename TValue>
-inline const Dictionary<typename TKey, typename TValue>& Dictionary<TKey, TValue>::operator=(const Dictionary<typename TKey, typename TValue> other) {
-	return Dictionary<TKey, TValue>(other);
+inline const Dictionary<typename TKey, typename TValue>& Dictionary<TKey, TValue>::operator=(const Dictionary<typename TKey, typename TValue>& other) {
+	clear(); //Clears the list
+	//Sets m_items equal to a new items list that is equal in size to the other's
+	m_items = new Item[other.getCount()]();
+
+	//Copies the values from the other list onto this list
+	for (int i = 0; i < other.getCount(); i++) {
+		m_items[i] = other.m_items[i];
+	}
+
+	//Sets the count equal to the other list's count
+	m_itemCount = other.getCount();
+
+	return *this;
 }
 
 template<typename TKey, typename TValue>
@@ -185,17 +197,7 @@ inline TValue Dictionary<TKey, TValue>::operator[](const TKey key)
 
 template<typename TKey, typename TValue>
 inline Dictionary<TKey, TValue>::Dictionary(const Dictionary< TKey, TValue>& other) {
-	clear(); //Clears the list
-	//Sets m_items equal to a new items list that is equal in size to the other's
-	m_items = new Item[other.getCount()]();
-
-	//Copies the values from the other list onto this list
-	for (int i = 0; i < other.getCount(); i++) {
-		m_items[i] = other.m_items[i];
-	}
-
-	//Sets the count equal to the other list's count
-	m_itemCount = other.getCount();
+	*this = other;
 }
 
 template<typename TKey, typename TValue>
