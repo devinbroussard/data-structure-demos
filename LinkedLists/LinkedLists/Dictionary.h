@@ -168,17 +168,7 @@ inline Dictionary<TKey, TValue>::Dictionary() {
 
 template<typename TKey, typename TValue>
 inline const Dictionary<typename TKey, typename TValue>& Dictionary<TKey, TValue>::operator=(const Dictionary<typename TKey, typename TValue> other) {
-	clear(); //Clears the list
-	//Sets m_items equal to a new items list that is equal in size to the other's
-	m_items = new Item[other.getCount()]();
-
-	//Copies the values from the other list onto this list
-	for (int i = 0; i < other.getCount(); i++) {
-		m_items[i] = other.m_items[i];
-	}
-
-	//Sets the count equal to the other list's count
-	m_itemCount = other.getCount();
+	return Dictionary<TKey, TValue>(other);
 }
 
 template<typename TKey, typename TValue>
@@ -194,8 +184,18 @@ inline TValue Dictionary<TKey, TValue>::operator[](const TKey key)
 
 
 template<typename TKey, typename TValue>
-inline Dictionary<TKey, TValue>::Dictionary(const Dictionary<typename TKey, typename TValue>& other) {
-	*this = other; //Copies the values of the other dictionary onto this one
+inline Dictionary<TKey, TValue>::Dictionary(const Dictionary< TKey, TValue>& other) {
+	clear(); //Clears the list
+	//Sets m_items equal to a new items list that is equal in size to the other's
+	m_items = new Item[other.getCount()]();
+
+	//Copies the values from the other list onto this list
+	for (int i = 0; i < other.getCount(); i++) {
+		m_items[i] = other.m_items[i];
+	}
+
+	//Sets the count equal to the other list's count
+	m_itemCount = other.getCount();
 }
 
 template<typename TKey, typename TValue>

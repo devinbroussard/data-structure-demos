@@ -5,19 +5,23 @@
 
 
 int main() {
-	List<int> list = List<int>();
+	Dictionary<char, int> dictionary = Dictionary<char, int>();
+	Dictionary<char, int> dictionary2;
 
+	dictionary.addItem('a', 1);
+	dictionary.addItem('b', 2);
+	dictionary.addItem('c', 3);
+	dictionary.addItem('d', 4);
+	dictionary.addItem('e', 5);
+	dictionary.addItem('f', 6);
 
-	list.pushBack(20);
-	list.pushBack(10);
-	list.pushBack(11);
-	list.pushBack(1);
-	list.pushBack(1);
-	list.pushBack(1);
-	list.pushFront(33);
-	list.print();
-	list.sort();
-	list.print();
+	dictionary2 = dictionary;
 
-		
+	int num;
+	//if (dictionary2.remove('b', num))
+	//	std::cout << num << "\n";
+	//num = 0;
+
+	dictionary2.tryGetValue('b', num);
+	std::cout << dictionary2.containsKey('d');
 }
