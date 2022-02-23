@@ -6,16 +6,28 @@ int main() {
 	List<int> testList = List<int>();
 	List<int> testListTwo = List<int>();
 
+	Iterator<int> iter = Iterator<int>();
+
+	++iter;
+
 	testList.pushBack(11);
 	testList.pushBack(3);
 	testList.pushBack(2);
 	testList.pushBack(3);
 	testList.pushBack(7);
 
+	iter = testList.begin();
+
+	testList.clearList();
+
+	--iter;
+
 	testListTwo.pushBack(42);
 	testListTwo.pushBack(1);
 	testListTwo.pushBack(16);
 	testListTwo.pushBack(55);
+
+
 
 	std::cout << "1. Adding items to the list:\n\n";
 	testList.print();
