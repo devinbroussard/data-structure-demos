@@ -244,9 +244,11 @@ inline bool List<T>::getData(Iterator<T>& iterator, int index)
 		return false;
 
 	iterator = begin(); //Sets the backwardsIterator equal to the first node in this list 
+	
 	//Loops through the list until the backwardsIterator reaches the node at the given index
-	while (iterator < index) 
+	for (int i = 0; i < index; i++)
 		++iterator; 
+
 	return true;
 }
 
