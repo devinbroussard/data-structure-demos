@@ -94,6 +94,9 @@ inline bool Dictionary<TKey, TValue>::tryGetValue(const TKey key, TValue& value)
 
 template<typename TKey, typename TValue>
 inline void Dictionary<TKey, TValue>::addItem(const TKey& key, const TValue& value) {
+	if (containsKey(key))
+		return;
+
 	//Create a new temporary array that is one element larger than the current items array
 	Item* tempArray = new Item[getCount() + 1];
 
@@ -140,7 +143,7 @@ inline bool Dictionary<TKey, TValue>::remove(const TKey key) {
 		m_items = tempArray; //Set the items array to be the temporary one
 		m_itemCount--; //Decrement the item count because an item was deleted
 	}
-	else delete tempArray; //Delete the temporary array to avoid a memory leak
+	else delete[] tempArray; //Delete the temporary array to avoid a memory leak
 
 	return itemRemoved; //Returns whether or not an item was deleted
 }
