@@ -16,12 +16,6 @@ int main() {
 	testList.pushBack(3);
 	testList.pushBack(7);
 
-	iter = testList.begin();
-
-	testList.clearList();
-
-	--iter;
-
 	testListTwo.pushBack(42);
 	testListTwo.pushBack(1);
 	testListTwo.pushBack(16);
