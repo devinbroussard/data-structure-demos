@@ -56,4 +56,6 @@ int main() {
 		std::cout << "Key: " << keys[i];
 		std::cout << " Value: " << value << std::endl;
 	}
+
+	system("pause");
 }
