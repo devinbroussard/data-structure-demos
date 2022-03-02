@@ -118,32 +118,41 @@ inline void Dictionary<TKey, TValue>::addItem(const TKey& key, const TValue& val
 
 template<typename TKey, typename TValue>
 inline bool Dictionary<TKey, TValue>::remove(const TKey key) {
+	if (getCount() == 0) //Returns false if the dictionary is already empty
+		return false;
+
 	//Creates a temporary item array that is one element smaller than the current item array
 	Item* tempArray = new Item[m_itemCount - 1];
 	bool itemRemoved = false; //Creates a bool that stores whether or not an item got removed from the list
 
-	int j = 0;
-	for (int i = 0; i < m_itemCount; i++) {
-		//If the current item's key doesn't match with the key to delete...
-		if (m_items[i].key != key) {
-			//Copy the current item onto the temporary array
-			tempArray[j].key = m_items[i].key;
-			tempArray[j].value = m_items[i].value;
-			j++; //Increments j to go to the next index of the temporary array
-		}
-		else {
-			//Otherwise, skip this item, set itemRemoved to be true, and skip incrementing j
+	if (getCount() == 1) {
+		if (containsKey(key))
 			itemRemoved = true;
+	}
+	else {
+		int j = 0;
+		for (int i = 0; i < m_itemCount; i++) {
+			//If the current item's key doesn't match with the key to delete...
+			if (m_items[i].key != key) {
+				//Copy the current item onto the temporary array
+				tempArray[j].key = m_items[i].key;
+				tempArray[j].value = m_items[i].value;
+				j++; //Increments j to go to the next index of the temporary array
+			}
+			else {
+				//Otherwise, skip this item, set itemRemoved to be true, and skip incrementing j
+				itemRemoved = true;
+			}
 		}
 	}
 
 	//If an item was removed...
-	if (itemRemoved = true) {
+	if (itemRemoved == true) {
 		delete[] m_items; //Delete the current items array
 		m_items = tempArray; //Set the items array to be the temporary one
 		m_itemCount--; //Decrement the item count because an item was deleted
 	}
-	else delete[] tempArray; //Delete the temporary array to avoid a memory leak
+	else delete[] tempArray;//Delete the temporary array to avoid a memory leak
 
 	return itemRemoved; //Returns whether or not an item was deleted
 }
